@@ -56,19 +56,16 @@ def centralCommand() {
         log.trace "Central Command ${dev} ${op}"
         
         if (dev == "keiths desk lamp") {
-            if (op == "on") { light.on() }
-            else if (op == "off") { light.off() }
-            else if (op == "status") { }
-            def arg = light.currentState("switch")["value"]
-            return ["talk2me":"${dev} is ${op}", ]
-            // talk2me : keiths desk lamp is on (or off)    
-            // used op because value is never updated in time before the return
+            def arg = light.currentState("switch")["value"]  //value before change 
+            if (op == "on") { light.on(); arg = op;}         //switch flips slow in state, so tell them we did Op
+            else if (op == "off") { light.off(); arg = op; } // ...or it will report what it was, not what we want
+            else if (op == "status") { }                     // dont report Op, report the real currentState
+            return ["talk2me":"${dev} is ${arg}" ]           // talk2me : keiths desk lamp is on (or off) 
         } 
         
         if (dev == "keiths medic pendant") {
-            def arg = pres.currentState("presence")["value"]
-            return ["talk2me":"${dev} is ${arg}"]
-            // talk2me : keiths medic pendant is present (or not present)
+            def arg = pres.currentState("presence")["value"] // lookup the current presence status
+            return ["talk2me":"${dev} is ${arg}"]            // talk2me : keiths medic pendant is present (or not present)
         } 
         
         // default return
