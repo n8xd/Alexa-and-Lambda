@@ -51,7 +51,7 @@ mappings {
 // take a device and operation the user has spoken to Alexa, perform the opreation on the device and confirm with words.
 def centralCommand() {
         log.debug params
-	      def dev = params.device
+	    def dev = params.device
         def op = params.operator
         log.trace "Central Command ${dev} ${op}"
         
@@ -60,19 +60,18 @@ def centralCommand() {
             else if (op == "off") { light.off() }
             else if (op == "status") { }
             def arg = light.currentState("switch")["value"]
-            return ["name":dev, "value":arg, "talk2me":"${dev} is ${op}", ]
+            return ["talk2me":"${dev} is ${op}", ]
             // talk2me : keiths desk lamp is on (or off)    
             // used op because value is never updated in time before the return
         } 
         
         if (dev == "keiths medic pendant") {
             def arg = pres.currentState("presence")["value"]
-            return ["name":dev, "value":arg, "talk2me":"${dev} is ${arg}"]
+            return ["talk2me":"${dev} is ${arg}"]
             // talk2me : keiths medic pendant is present (or not present)
         } 
         
         // default return
-        def ok = [ "name":dev, "value":op, "talk2me":"I cant find ${dev} in the devices" ]
+        def ok = ["talk2me":"I cant figure out how to do ${op} with ${dev}" ]
         return ok
 }
-
